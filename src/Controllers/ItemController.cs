@@ -19,6 +19,13 @@
             return View(await _cosmosDbService.GetItemsAsync("SELECT * FROM c"));
         }
 
+        [HttpGet]
+        [ActionName("ListAPI")]
+        public async Task<IActionResult> ListAPIAsync()
+        {
+            return Ok(await _cosmosDbService.GetItemsAsync("SELECT * FROM c"));
+        }
+
         [ActionName("Create")]
         public IActionResult Create()
         {
@@ -38,6 +45,16 @@
             }
 
             return View(item);
+        }
+
+        [HttpPost]
+        [ActionName("CreateAPI")]
+        public async Task<ActionResult> CreateAPIAsync([Bind("Id,Name,Description,Completed")] Item item)
+        {
+            item.Id = Guid.NewGuid().ToString();
+            await _cosmosDbService.AddItemAsync(item);
+
+            return Ok(item);
         }
 
         [HttpPost]
