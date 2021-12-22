@@ -6,6 +6,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.AspNetCore.Antiforgery;
 
     public class Startup
     {
@@ -21,6 +22,7 @@
         {
             services.AddControllersWithViews();
             services.AddSingleton<ICosmosDbService>(InitializeCosmosClientInstanceAsync(Configuration.GetSection("CosmosDb")).GetAwaiter().GetResult());
+            services.AddAntiforgery(o => o.SuppressXFrameOptionsHeader = true);
         }
         // </ConfigureServices> 
 
@@ -40,8 +42,7 @@
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseRouting();
-
+            app.UseRouting(); 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

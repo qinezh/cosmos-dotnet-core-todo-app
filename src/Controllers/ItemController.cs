@@ -27,7 +27,7 @@
 
         [HttpPost]
         [ActionName("Create")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateAsync([Bind("Id,Name,Description,Completed")] Item item)
         {
             if (ModelState.IsValid)
@@ -42,7 +42,7 @@
 
         [HttpPost]
         [ActionName("Edit")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditAsync([Bind("Id,Name,Description,Completed")] Item item)
         {
             if (ModelState.IsValid)
@@ -90,7 +90,7 @@
 
         [HttpPost]
         [ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmedAsync([Bind("Id")] string id)
         {
             await _cosmosDbService.DeleteItemAsync(id);

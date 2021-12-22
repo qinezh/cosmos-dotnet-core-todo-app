@@ -1,0 +1,59 @@
+{
+    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.11/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.11",
+    "version": "1.0.0",
+    "id": "ea8a63dd-4fb0-48a5-b848-38493efaf4a2",
+    "packageName": "com.microsoft.teams.extension",
+    "developer": {
+        "name": "Teams App, Inc.",
+        "websiteUrl": "https://localhost:3000",
+        "privacyUrl": "https://localhost:3000/index.html#/privacy",
+        "termsOfUseUrl": "https://localhost:3000/index.html#/termsofuse"
+    },
+    "icons": {
+        "color": "resources/color.png",
+        "outline": "resources/outline.png"
+    },
+    "name": {
+        "short": "TODO App (.NET + Cosmos)",
+        "full": "TODO App (.NET + Cosmos) - local debug"
+    },
+    "description": {
+        "short": "TODO App (.NET + Cosmos) of Microsoft Teams Tab app.",
+        "full": "This is a TODO App (.NET + Cosmos) of Microsoft Teams Tab app."
+    },
+    "accentColor": "#FFFFFF",
+    "composeExtensions": [],
+    "configurableTabs": [
+        {
+            "configurationUrl": "https://localhost:5001/index.html#/config",
+            "canUpdateConfiguration": true,
+            "scopes": [
+                "team"
+            ]
+        }
+    ],
+    "staticTabs": [
+        {
+            "entityId": "index",
+            "name": "Personal Tab",
+            "contentUrl": "https://localhost:5001",
+            "websiteUrl": "https://localhost:5001",
+            "scopes": [
+                "personal",
+                "team"
+            ]
+        }
+    ],
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": [
+        "localhost"
+    ],
+    "webApplicationInfo": {
+        "id": "ef15f2e7-327a-4b8d-b893-efb4b1b8e8cf",
+        "resource": "api://localhost/ef15f2e7-327a-4b8d-b893-efb4b1b8e8cf"
+    }
+}
