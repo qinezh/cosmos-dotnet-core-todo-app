@@ -42,12 +42,12 @@
                     ],
                     "commands": [
                         {
-                            "title": "welcome",
-                            "description": "Resend welcome card of this Bot"
+                            "title": "list todo",
+                            "description": "List todo"
                         },
                         {
-                            "title": "learn",
-                            "description": "Learn about Adaptive Card and Bot Command"
+                            "title": "add todo",
+                            "description": "Add todo item"
                         }
                     ]
                 }
@@ -62,7 +62,7 @@
         "messageTeamMembers"
     ],
     "validDomains": [
-        "5a21-2404-f801-9000-18-c18c-947d-4fcb-5584.ngrok.io"
+        "5f19-2404-f801-9000-1a-60fa-d884-1207-1287.ngrok.io"
     ],
     "webApplicationInfo": {
         "id": "29c38136-e066-41ff-83c6-043e2eec7655",

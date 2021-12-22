@@ -1,16 +1,18 @@
 import { TeamsActivityHandler, CardFactory, TurnContext, Attachment, AdaptiveCardInvokeValue, AdaptiveCardInvokeResponse} from "botbuilder";
-const rawWelcomeCard = require("./adaptiveCards/welcome.json");
-const rawLearnCard = require("./adaptiveCards/learn.json");
+import axios from "axios";
+import * as https from "https";
+
 const ACData = require("adaptivecards-templating");
+const endpoint = "https://localhost:5001";
+
+enum Command {
+  add = "add todo",
+  list = "list todo"
+}
 
 export class TeamsBot extends TeamsActivityHandler {
-  // record the likeCount
-  likeCountObj: { likeCount: number };
-
   constructor() {
     super();
-
-    this.likeCountObj = { likeCount: 0 };
 
     this.onMessage(async (context, next) => {
       console.log("Running with Message Activity.");
@@ -24,25 +26,31 @@ export class TeamsBot extends TeamsActivityHandler {
         txt = removedMentionText.toLowerCase().replace(/\n|\r/g, "").trim();
       }
 
+      const instance = axios.create({
+        httpsAgent: new https.Agent({  
+          rejectUnauthorized: false
+        })
+      });
+
       // Trigger command by IM text
-      switch (txt) {
-        case "welcome": {
-          const card = this.renderAdaptiveCard(rawWelcomeCard);
-          await context.sendActivity({ attachments: [card] });
-          break;
+      if (txt.startsWith(Command.add)) {
+        const todo = txt.slice(txt.indexOf(Command.add)+Command.add.length).trim();
+        // create todo
+        const params = new URLSearchParams();
+        params.append('Name', todo);
+        params.append('Completed', "false");
+
+        await instance.post(`${endpoint}/item/CreateAPI`, params);
+
+        await context.sendActivity(`new todo ${todo} created.`);
+      } else if (txt == Command.list) {
+        // list todo
+        const response = await instance.get(`${endpoint}/item/ListAPI`);
+        const todos = []
+        for (const item of response.data) {
+          todos.push(item.name);
         }
-        case "learn": {
-          this.likeCountObj.likeCount = 0;
-          const card = this.renderAdaptiveCard(rawLearnCard, this.likeCountObj);
-          await context.sendActivity({ attachments: [card] });
-          break;
-        }
-        /**
-         * case "yourCommand": {
-         *   await context.sendActivity(`Add your response here!`);
-         *   break;
-         * }
-         */
+        await context.sendActivity(todos.join('\n'));
       }
 
       // By calling next() you ensure that the next BotHandler is run.
@@ -53,32 +61,12 @@ export class TeamsBot extends TeamsActivityHandler {
       const membersAdded = context.activity.membersAdded;
       for (let cnt = 0; cnt < membersAdded.length; cnt++) {
         if (membersAdded[cnt].id) {
-          const card = this.renderAdaptiveCard(rawWelcomeCard);
-          await context.sendActivity({ attachments: [card] });
+          await context.sendActivity("welcome");
           break;
         }
       }
       await next();
     });
-  }
-
-  // Invoked when an action is taken on an Adaptive Card. The Adaptive Card sends an event to the Bot and this
-  // method handles that event.
-  async onAdaptiveCardInvoke(
-    context: TurnContext,
-    invokeValue: AdaptiveCardInvokeValue
-  ): Promise<AdaptiveCardInvokeResponse> {
-    // The verb "userlike" is sent from the Adaptive Card defined in adaptiveCards/learn.json
-    if (invokeValue.action.verb === "userlike") {
-      this.likeCountObj.likeCount++;
-      const card = this.renderAdaptiveCard(rawLearnCard, this.likeCountObj);
-      await context.updateActivity({
-        type: "message",
-        id: context.activity.replyToId,
-        attachments: [card],
-      });
-      return { statusCode: 200, type: undefined, value: undefined };
-    }
   }
 
   // Bind AdaptiveCard with data
